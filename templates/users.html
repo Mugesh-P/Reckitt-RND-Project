@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Manage Users (Admin Only)</h2>
+
+<form action="/manage-users" method="POST">
+  <label>User Email:</label>
+  <input type="email" name="username" required>
+
+  <label>Role:</label>
+  <select name="role">
+    <option value="User">User</option>
+    <option value="Admin">Admin</option>
+  </select>
+
+  <br><br>
+  <button type="submit">Save</button>
+</form>
+
+<p style="margin-top:20px;">⚙️ In production, integrate this with the Microsoft Graph API for real user creation and role assignment in Entra ID.</p>
+{% endblock %}

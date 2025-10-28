@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  /* Page layout */
+  .upload-container {
+    max-width: 700px;
+    margin: 50px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .upload-container:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  h2 {
+    color: #1e1e2f;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  /* Input styling */
+  label {
+    display: block;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  input[type="text"],
+  textarea,
+  input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  input[type="text"]:focus,
+  textarea:focus,
+  input[type="file"]:focus {
+    border-color: #0078d4;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  /* Tags section */
+  .tags-group {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .tags-group label {
+    margin-right: 15px;
+    background: #f3f3f3;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .tags-group input {
+    margin-right: 6px;
+  }
+
+  .tags-group label:hover {
+    background: #e6f0ff;
+  }
+
+  /* Upload button */
+  button {
+    width: 100%;
+    margin-top: 30px;
+    background: #0078d4;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    padding: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background: #005a9e;
+    transform: translateY(-1px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .upload-container {
+      padding: 25px;
+      margin: 20px;
+    }
+
+    h2 {
+      font-size: 22px;
+    }
+  }
+</style>
+
+<div class="upload-container">
+  <h2>📤 Upload File to Azure Blob Storage</h2>
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <label>Select File:</label>
+    <input type="file" name="file" required>
+
+    <label>Your Name:</label>
+    <input type="text" name="name" placeholder="e.g., Mugesh Kumar" required>
+
+    <label>Display Name:</label>
+    <input type="text" name="filename" placeholder="e.g., Q1 Financial Report" required>
+
+    <label>Description:</label>
+    <textarea name="description" rows="3" placeholder="Add a brief description of this file..."></textarea>
+
+    <label>Tags:</label>
+    <div class="tags-group">
+      <label><input type="checkbox" name="tags" value="Finance"> Finance</label>
+      <label><input type="checkbox" name="tags" value="HR"> HR</label>
+      <label><input type="checkbox" name="tags" value="Technical"> Technical</label>
+      <label><input type="checkbox" name="tags" value="Confidential"> Confidential</label>
+    </div>
+
+    <button type="submit">Upload File</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .dashboard-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 0 20px;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 28px;
+    color: #1e1e2f;
+    margin-bottom: 10px;
+  }
+
+  p {
+    text-align: center;
+    color: #555;
+    margin-bottom: 40px;
+  }
+
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+  }
+
+  .card {
+    background: #fff;
+    padding: 25px 20px;
+    border-radius: 12px;
+    width: 220px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e1e2f;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  .card span {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .cards {
+      gap: 15px;
+    }
+
+    .card {
+      width: 100%;
+      padding: 20px;
+    }
+  }
+</style>
+
+<div class="dashboard-container">
+  <h2>Welcome, {{ user.name }}</h2>
+  <p>Use the cards below to navigate through Upload, Search, or User Management (if admin).</p>
+
+  <div class="cards">
+    <div class="card" onclick="window.location='/upload-page'">
+      <span>📤</span>
+      Upload Files
+    </div>
+    <div class="card" onclick="window.location='/search-page'">
+      <span>🔍</span>
+      Search Files
+    </div>
+    {% if 'Admin' in user.roles %}
+      <div class="card" onclick="window.location='/users-page'">
+        <span>👥</span>
+        Manage Users
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

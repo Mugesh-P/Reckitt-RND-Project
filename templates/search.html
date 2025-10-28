@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  /* Container styling */
+  .search-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .search-container:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  h2 {
+    text-align: center;
+    color: #1e1e2f;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 25px;
+  }
+
+  /* Search input styling */
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  input[type="text"] {
+    flex: 1 1 300px;
+    padding: 12px;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  input[type="text"]:focus {
+    border-color: #0078d4;
+  }
+
+  button {
+    padding: 12px 20px;
+    background: #0078d4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background: #005a9e;
+    transform: translateY(-1px);
+  }
+
+  /* Results styling */
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .result-card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+  }
+
+  .result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .result-card strong {
+    font-size: 18px;
+    color: #1e1e2f;
+  }
+
+  .result-card em {
+    color: #555;
+    display: block;
+    margin: 6px 0;
+  }
+
+  .result-card small {
+    color: #888;
+  }
+
+  .result-card button {
+    margin-top: 10px;
+    background: #0078d4;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .result-card button:hover {
+    background: #005a9e;
+  }
+
+  @media (max-width: 600px) {
+    .search-container {
+      padding: 25px;
+      margin: 20px;
+    }
+
+    input[type="text"] {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+
+<div class="search-container">
+  <h2>🔍 Search Uploaded Files</h2>
+  <form onsubmit="searchFiles(event)">
+    <input type="text" id="query" placeholder="Search by name, tag, or description" required>
+    <button type="submit">Search</button>
+  </form>
+
+  <div id="results" class="results"></div>
+</div>
+
+<script>
+async function searchFiles(event) {
+  event.preventDefault();
+  const query = document.getElementById('query').value;
+  const resDiv = document.getElementById('results');
+  resDiv.innerHTML = "<p>Searching...</p>";
+
+  try {
+    const res = await fetch(`/search?query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+
+    if (data.length === 0) {
+      resDiv.innerHTML = "<p>No results found</p>";
+      return;
+    }
+
+    resDiv.innerHTML = data.map(r => `
+      <div class="result-card">
+        <strong>${r.FileName}</strong> (${r.FileType})<br>
+        <em>${r.Description || ''}</em>
+        <small>Uploaded by ${r.UploaderName} on ${r.TimeStamp}</small><br>
+        <button onclick="window.location='/download?blob=${encodeURIComponent(r.BlobName)}'">⬇️ Download</button>
+      </div>
+    `).join('');
+  } catch (err) {
+    resDiv.innerHTML = "<p style='color:red;'>Error fetching results</p>";
+    console.error(err);
+  }
+}
+</script>
+{% endblock %}

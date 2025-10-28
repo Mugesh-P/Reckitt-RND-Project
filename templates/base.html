@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title or 'Blob Portal' }}</title>
+  <style>
+    /* ---------- General ---------- */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      display: flex;
+      background: #f5f7fa;
+      color: #333;
+      overflow: hidden;
+    }
+
+    /* ---------- Sidebar ---------- */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, #0078d4, #005a9e);
+      color: white;
+      height: 100vh;
+      padding: 25px 20px;
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar h2 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+      font-size: 1.4em;
+    }
+
+    .user-info {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 12px 8px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-size: 0.95em;
+    }
+
+    .user-info strong {
+      display: block;
+      font-size: 1em;
+      color: #fff;
+    }
+
+    /* (Hidden email — uncomment if needed)
+    .user-info small {
+      display: block;
+      font-size: 0.8em;
+      opacity: 0.8;
+    }
+    */
+
+    /* ---------- Menu Links ---------- */
+    .menu {
+      flex-grow: 1;
+    }
+
+    .menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateX(4px);
+    }
+
+    /* ---------- Logout Button (Moved Slightly Up) ---------- */
+    .logout {
+      margin-top: 10px;
+      text-align: center;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .logout a {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .logout a:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    /* ---------- Main Content ---------- */
+    .main {
+      margin-left: 280px;
+      padding: 40px;
+      flex: 1;
+      background: #f5f7fa;
+      min-height: 100vh;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .main h1,
+    .main h2 {
+      color: #005a9e;
+    }
+
+    /* ---------- Buttons ---------- */
+    button {
+      background: #0078d4;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.95em;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #005a9e;
+    }
+
+    /* ---------- Scrollbar ---------- */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .main {
+        margin-left: 0;
+        padding: 20px;
+      }
+      .logout {
+        margin-top: 0;
+        border-top: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div>
+      <h2>☁️ Blob Portal</h2>
+      <div class="user-info">
+        <strong>{{ user.name }}</strong>
+        <!-- <small>{{ user.email }}</small> -->
+      </div>
+
+      <div class="menu">
+        <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">🏠 Dashboard</a>
+        <a href="{{ url_for('upload_page') }}" class="{% if request.endpoint == 'upload_page' %}active{% endif %}">📤 Upload</a>
+        <a href="{{ url_for('search_page') }}" class="{% if request.endpoint == 'search_page' %}active{% endif %}">🔍 Search</a>
+        {% if 'Admin' in user.roles %}
+          <a href="{{ url_for('users_page') }}" class="{% if request.endpoint == 'users_page' %}active{% endif %}">👥 User Management</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="logout">
+      <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
+  </div>
+
+  <div class="main">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
